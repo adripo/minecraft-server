@@ -1,0 +1,7 @@
+#!/command/with-contenv sh
+
+# Setup JVM args
+printf -- '
+-Xms%s -Xmx%s
+'  "$JVM_XMS" "$JVM_XMX" \
+>> "$APP_DIR/user_jvm_args.txt"

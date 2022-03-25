@@ -1,0 +1,124 @@
+#!/command/with-contenv sh
+set -x
+
+## Functions
+
+# Define start procedure
+start_server() {
+  # Execute command in data directory for persistence
+  printf -- 'minecraft-server: info: starting server\n'
+
+  # Execute main command
+  # Details:
+  # it is used process substitution (which generates a file): <()
+  # and input redirection (which connects the file to STDIN): <
+  # towards commands group in subshell: ()
+  (
+    # Execute command in data directory for persistence
+    cd "$DATA_DIR" || exit 1
+
+    ./run.sh nogui
+
+  ) < <(tail -f "$STDIN_PIPE") &
+
+  # Get executed command pid
+  CMD_PID=$!
+}
+
+# Define cleanup procedure
+stop_server() {
+  printf -- 'minecraft-server: info: stopping server gracefully\n'
+  # Send stop command to main process
+  # NOTE: remember to set 'stop_grace_period' on Docker run to the desired maximum execution time needed for the main command to end
+  # NOTE2: remember to also change value in /etc/s6-overlay/s6-rc.d/minecraft-server/timeout-kill with value of stop_grace_period -(minus) 10s [put value in ms]
+  printf -- '/stop\n' > "$STDIN_PIPE"
+
+  # Wait for command to end
+  # exits when main command stop gracefully
+  wait "$CMD_PID"
+
+  printf -- 'minecraft-server: info: server stopped successfully\n'
+
+  # Remove symlinks from data directory
+  remove_symlinks
+
+  # Exit
+  exit 0
+}
+
+# Define create_symlinks function
+create_symlinks() {
+  printf -- 'minecraft-server: info: creating symlinks in data directory\n'
+
+  ln -nsf "$APP_DIR/run.sh" "$DATA_DIR/run.sh"
+  ln -nsf "$APP_DIR/user_jvm_args.txt" "$DATA_DIR/user_jvm_args.txt"
+
+  # Check if libraries dir exists
+  # NOTE: needed only for forge
+  if [ -d "$APP_DIR/libraries" ]; then
+    ln -nsf "$APP_DIR/libraries" "$DATA_DIR/libraries"
+  fi
+}
+
+# Define remove_symlinks function
+remove_symlinks() {
+  printf -- 'minecraft-server: info: removing symlinks from data directory\n'
+
+  if [ -L "$DATA_DIR/run.sh" ]; then
+    rm -f "$DATA_DIR/run.sh"
+  fi
+
+  if [ -L "$DATA_DIR/user_jvm_args.txt" ]; then
+    rm -f "$DATA_DIR/user_jvm_args.txt"
+  fi
+
+  if [ -L "$DATA_DIR/libraries" ]; then
+    rm -f "$DATA_DIR/libraries"
+  fi
+}
+
+
+## Main
+
+# Setup input pipe
+if [ ! -p "$STDIN_PIPE" ]; then
+  mkfifo "$STDIN_PIPE" #TODO create missing directories if path doesn't exist
+fi
+
+# TODO: already created in dockerfile
+## Setup data directory
+#if [ ! -d "$DATA_DIR" ]; then
+#  mkdir -p "$DATA_DIR"
+#fi
+
+# Create symlinks in data directory
+create_symlinks
+
+# Execute main command
+
+## Accept eula
+##sed -i 's/eula=false/eula=true/g' $DATA_DIR/eula.txt
+printf -- 'eula=true\n' > $DATA_DIR/eula.txt
+
+## Execute command in data directory for persistence
+#printf -- 'minecraft-server: info: starting server\n'
+#cd "$DATA_DIR" && ./run.sh nogui < "$STDIN_PIPE" &
+#
+## Get executed command pid
+#CMD_PID=$!
+start_server
+
+# Trap SIGTERM
+trap 'stop_server' TERM
+
+# Wait for command to end
+# exits when main command fails
+wait "$CMD_PID"
+
+printf -- 'minecraft-server: error: server stopped unexpectedly\n'
+
+# Remove symlinks from data directory
+remove_symlinks
+
+# Exit
+exit 1
