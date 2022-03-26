@@ -1,8 +1,8 @@
-#!/command/with-contenv bash
+#!/command/with-contenv sh
 
 time32="$(date +%Y)"
 
-if [[ "${time32}" == "1970" || "${time32}" == "1969" ]] && [ "$(uname -m)" == "armv7l" ]; then
+if { [ "${time32}" == "1970" ] || [ "${time32}" == "1969" ]; } && [ "$(uname -m)" == "armv7l" ]; then
   printf -- '
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
