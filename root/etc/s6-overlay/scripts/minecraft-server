@@ -46,6 +46,15 @@ stop_server() {
   exit 0
 }
 
+# Define create_pipe function
+create_pipe() {
+  printf -- 'minecraft-server: info: creating input pipe at %s\n', "$STDIN_PIPE"
+
+  if [ ! -p "$STDIN_PIPE" ]; then
+    mkfifo "$STDIN_PIPE" #TODO create missing directories if path doesn't exist
+  fi
+}
+
 # Define create_symlinks function
 create_symlinks() {
   printf -- 'minecraft-server: info: creating symlinks in data directory\n'
@@ -81,9 +90,7 @@ remove_symlinks() {
 ## Main
 
 # Setup input pipe
-if [ ! -p "$STDIN_PIPE" ]; then
-  mkfifo "$STDIN_PIPE" #TODO create missing directories if path doesn't exist
-fi
+create_pipe
 
 # Create symlinks in data directory
 create_symlinks
