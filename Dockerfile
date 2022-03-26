@@ -16,7 +16,7 @@ ARG APP_DIR="/app"
 ENV APP_DIR="${APP_DIR}"
 
 # Absolute path of data directory
-ARG DATA_DIR="/app_data"
+ARG DATA_DIR="/data"
 ENV DATA_DIR="${DATA_DIR}"
 
 # Absolute path of STDIN fifo pipe
