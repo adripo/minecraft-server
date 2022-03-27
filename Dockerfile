@@ -34,7 +34,8 @@ LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILD
 LABEL maintainer="adripo"
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 LABEL org.opencontainers.image.authors="adripo"
-LABEL org.opencontainers.image.url="https://github.com/adripo/minecraft-server/blob/main/README.md"
+LABEL org.opencontainers.image.url="https://github.com/adripo/minecraft-server"
+LABEL org.opencontainers.image.documentation="https://github.com/adripo/minecraft-server/blob/main/README.md"
 LABEL org.opencontainers.image.source="https://github.com/adripo/minecraft-server"
 LABEL org.opencontainers.image.version="${MC_VERSION}"
 LABEL org.opencontainers.image.title="Minecraft Server"
@@ -72,9 +73,12 @@ RUN chown abc:abc $DATA_DIR
 # Add local files
 COPY root/ /
 
-
-USER abc
+# Set workdir
 WORKDIR $APP_DIR
+
+
+# Setup server as abc user
+USER abc
 
 # Setup server
 RUN echo "**** setup server ****"
@@ -86,10 +90,9 @@ RUN rm -f server-setup.sh
 # Cleanup
 RUN rm -rf /tmp/*
 
-## Copy startup script
-#RUN echo "**** setup startup ****"
-#COPY --chown=abc:abc docker-startup.sh .
-#RUN chmod +x docker-startup.sh
+
+# Start as root
+USER root
 
 # Volume mount point
 VOLUME $DATA_DIR
@@ -97,8 +100,5 @@ VOLUME $DATA_DIR
 # Expose port
 EXPOSE 25565
 
-USER root
-
 # Startup
 ENTRYPOINT ["/init"]
-#CMD ["./docker-startup.sh"]

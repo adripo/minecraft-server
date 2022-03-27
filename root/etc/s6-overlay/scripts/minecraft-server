@@ -1,5 +1,4 @@
 #!/command/with-contenv sh
-set -x
 
 ## Functions
 
@@ -42,7 +41,6 @@ stop_server() {
   # Remove symlinks from data directory
   remove_symlinks
 
-  # Exit
   exit 0
 }
 
@@ -117,5 +115,4 @@ printf -- 'minecraft-server: error: server stopped unexpectedly\n'
 # Remove symlinks from data directory
 remove_symlinks
 
-# Exit
 exit 1
