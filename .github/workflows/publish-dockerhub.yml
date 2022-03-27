@@ -1,8 +1,9 @@
 name: Publish Docker image
 
 on:
-  release:
-    types: [published]
+  push
+#  release:
+#    types: [published]
 
 jobs:
   push_to_registry:
@@ -20,6 +21,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Split minecraft and forge versions
+        id: split
+        uses: actions/github-script@6
+        with:
+          script: |
+            const version = github.ref_name.split('-')[0]
+            core.setOutput('version', version)
+      - run: echo "${{ steps.split.outputs.version }}"
+      - run: echo "${{ steps.split.outputs.result }}"
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v3
@@ -29,9 +40,9 @@ jobs:
             type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}},prefix=v
             type=semver,pattern={{major}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{major}},prefix=v
             type=sha
 
       - name: Get build args from build.env
