@@ -37,8 +37,12 @@ jobs:
       - name: Get build args from build.env
         id: extra-build-args
         run: |
+          # Get env vars from build.env and remove comments, empty lines, trim
           args=$(cat build.env | sed -e 's/#.*//' -e 's/[ ^I]*$//' -e '/^$/ d')
-          args="${args//$'\n'/'%0A'}"
+          
+          # Convert multiline to json
+          args=$(printf -- '%s' "${args}" | jq --raw-input --slurp '.')
+          
           echo "::set-output name=args::${args}"
 
       - name: Build and push Docker image
