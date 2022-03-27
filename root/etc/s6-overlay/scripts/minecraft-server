@@ -48,10 +48,17 @@ stop_server() {
 
 # Define create_pipe function
 create_pipe() {
-  printf -- 'minecraft-server: info: creating input pipe at %s\n', "$STDIN_PIPE"
+  printf -- 'minecraft-server: info: creating input pipe at: %s\n', "${STDIN_PIPE}"
 
-  if [ ! -p "$STDIN_PIPE" ]; then
-    mkfifo "$STDIN_PIPE" #TODO create missing directories if path doesn't exist
+  # Create dir path if not exists
+  STDIN_PIPE_DIR=$(dirname "${STDIN_PIPE}")
+  if [ ! -d "${STDIN_PIPE_DIR}" ]; then
+    mkdir -p "${STDIN_PIPE_DIR}"
+  fi
+
+  # Create fifo pipe if not exists
+  if [ ! -p "${STDIN_PIPE}" ]; then
+    mkfifo "${STDIN_PIPE}"
   fi
 }
 
