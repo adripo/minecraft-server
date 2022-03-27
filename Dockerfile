@@ -63,18 +63,18 @@ RUN rm -f /tmp/s6-overlay-x86_64.tar.xz
 
 # Create abc user
 RUN echo "**** create abc user and group ****" && \
-    addgroup -g $PGID abc && \
-    adduser -u $PUID -G abc -h $APP_DIR -D abc
+    addgroup -g ${PGID} abc && \
+    adduser -u ${PUID} -G abc -h ${APP_DIR} -D abc
 
 # Create data dir
-RUN mkdir -p $DATA_DIR
-RUN chown abc:abc $DATA_DIR
+RUN mkdir -p ${DATA_DIR}
+RUN chown abc:abc ${DATA_DIR}
 
 # Add local files
 COPY root/ /
 
 # Set workdir
-WORKDIR $APP_DIR
+WORKDIR ${APP_DIR}
 
 
 # Setup server as abc user
@@ -95,7 +95,7 @@ RUN rm -rf /tmp/*
 USER root
 
 # Volume mount point
-VOLUME $DATA_DIR
+VOLUME ${DATA_DIR}
 
 # Expose port
 EXPOSE 25565
