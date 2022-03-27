@@ -1,7 +1,7 @@
 FROM alpine:3.15
 
 # ARG values
-ARG BUILD_DATE
+ARG BUILDTIME
 ARG MC_VERSION
 ARG DW_LINK
 ARG MC_SERVER="minecraft_server.${MC_VERSION}"
@@ -30,7 +30,7 @@ ENV PUID=1000
 ENV PGID=1000
 
 # Labels
-LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILD_DATE}"
+LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILDTIME}"
 LABEL maintainer="adripo"
 LABEL org.opencontainers.image.authors="adripo"
 

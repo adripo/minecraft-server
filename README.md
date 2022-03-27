@@ -10,7 +10,7 @@ docker build \
     --no-cache \
     --pull \
     -t adripo/${MC_NAME}:${MC_VERSION} \
-    --build-arg BUILD_DATE=${DATE_NOW} \
+    --build-arg BUILDTIME=${DATE_NOW} \
     $(cat build.env | sed -e 's/#.*//' -e 's/[ ^I]*$//' -e '/^$/ d' -e 's/^/--build-arg /g' | tr '\n' ' ') \
     .
 ```
