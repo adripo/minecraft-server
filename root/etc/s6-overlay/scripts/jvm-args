@@ -1,7 +1,8 @@
 #!/command/with-contenv sh
 
+#TODO: check if vars exist and set only the ones that exist
+#TODO: add extra jvm args
 # Setup JVM args
-printf -- '
--Xms%s -Xmx%s
-'  "$JVM_XMS" "$JVM_XMX" \
->> "$APP_DIR/user_jvm_args.txt"
+printf -- '-Xms%s -Xmx%s
+' "${JVM_XMS}" "${JVM_XMX}" \
+> "${APP_DIR}/user_jvm_args.txt"
