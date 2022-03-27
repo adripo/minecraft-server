@@ -47,7 +47,9 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: |
+            ${{ steps.meta.outputs.labels }}
+            org.opencontainers.image.documentation=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.url'] + '/blob/main/README.md' }}
           build-args: |
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             ${{ steps.extra-build-args.outputs.args }}

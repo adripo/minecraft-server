@@ -32,15 +32,7 @@ ENV PGID=1000
 # Labels
 LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILD_DATE}"
 LABEL maintainer="adripo"
-LABEL org.opencontainers.image.created="${BUILD_DATE}"
 LABEL org.opencontainers.image.authors="adripo"
-LABEL org.opencontainers.image.url="https://github.com/adripo/minecraft-server"
-LABEL org.opencontainers.image.documentation="https://github.com/adripo/minecraft-server/blob/main/README.md"
-LABEL org.opencontainers.image.source="https://github.com/adripo/minecraft-server"
-LABEL org.opencontainers.image.version="${MC_VERSION}"
-LABEL org.opencontainers.image.title="Minecraft Server"
-LABEL org.opencontainers.image.description="Minecraft Server wrapped in a Docker image"
-
 
 # Install dependencies
 RUN echo "**** install runtime packages ****" && \
