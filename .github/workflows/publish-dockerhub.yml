@@ -64,7 +64,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: |
             ${{ steps.meta.outputs.labels }}
-            org.opencontainers.image.documentation=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.url'] + '/blob/main/README.md' }}
+            org.opencontainers.image.documentation=${{ join(fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.url'], '/blob/main/README.md') }}
           build-args: |
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             ${{ fromJSON(steps.extra-build-args.outputs.args) }}
