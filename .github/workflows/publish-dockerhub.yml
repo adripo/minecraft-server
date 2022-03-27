@@ -24,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: adripo/minecraft-server-forge
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/minecraft-server-forge
           tags: |
             type=ref,event=branch
             type=ref,event=pr
