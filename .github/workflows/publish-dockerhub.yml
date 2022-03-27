@@ -23,6 +23,12 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: adripo/minecraft-server-forge
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: Get build args from build.env
         id: extra-build-args
