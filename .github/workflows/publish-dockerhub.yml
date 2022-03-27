@@ -26,10 +26,12 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/minecraft-server-forge
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}
             type=sha
 
       - name: Get build args from build.env
