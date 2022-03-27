@@ -28,7 +28,8 @@ jobs:
       - name: Get build args from build.env
         id: extra-build-args
         run: |
-          args=$(cat build.env | sed -e 's/#.*//' -e 's/[ ^I]*$//' -e '/^$/ d' | tr '\n' '%0A')
+          args=$(cat build.env | sed -e 's/#.*//' -e 's/[ ^I]*$//' -e '/^$/ d')
+          args="${args//$'\n'/'%0A'}"
           echo "::set-output name=args::${args}"
 
       - name: Get current date
