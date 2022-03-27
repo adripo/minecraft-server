@@ -15,11 +15,11 @@ start_server() {
   # towards commands group in subshell: ()
   (
     # Execute command in data directory for persistence
-    cd "$DATA_DIR" || exit 1
+    cd "${DATA_DIR}" || exit 1
 
     ./run.sh nogui
 
-  ) < <(tail -f "$STDIN_PIPE") &
+  ) < <(tail -f "${STDIN_PIPE}") &
 
   # Get executed command pid
   CMD_PID=$!
@@ -31,11 +31,11 @@ stop_server() {
   # Send stop command to main process
   # NOTE: remember to set 'stop_grace_period' on Docker run to the desired maximum execution time needed for the main command to end
   # NOTE2: remember to also change value in /etc/s6-overlay/s6-rc.d/minecraft-server/timeout-kill with value of stop_grace_period -(minus) 10s [put value in ms]
-  printf -- '/stop\n' > "$STDIN_PIPE"
+  printf -- '/stop\n' > "${STDIN_PIPE}"
 
   # Wait for command to end
   # exits when main command stop gracefully
-  wait "$CMD_PID"
+  wait "${CMD_PID}"
 
   printf -- 'minecraft-server: info: server stopped successfully\n'
 
@@ -66,13 +66,13 @@ create_pipe() {
 create_symlinks() {
   printf -- 'minecraft-server: info: creating symlinks in data directory\n'
 
-  ln -nsf "$APP_DIR/run.sh" "$DATA_DIR/run.sh"
-  ln -nsf "$APP_DIR/user_jvm_args.txt" "$DATA_DIR/user_jvm_args.txt"
+  ln -nsf "${APP_DIR}/run.sh" "${DATA_DIR}/run.sh"
+  ln -nsf "${APP_DIR}/user_jvm_args.txt" "${DATA_DIR}/user_jvm_args.txt"
 
   # Check if libraries dir exists
   # NOTE: needed only for forge
-  if [ -d "$APP_DIR/libraries" ]; then
-    ln -nsf "$APP_DIR/libraries" "$DATA_DIR/libraries"
+  if [ -d "${APP_DIR}/libraries" ]; then
+    ln -nsf "${APP_DIR}/libraries" "${DATA_DIR}/libraries"
   fi
 }
 
@@ -80,16 +80,16 @@ create_symlinks() {
 remove_symlinks() {
   printf -- 'minecraft-server: info: removing symlinks from data directory\n'
 
-  if [ -L "$DATA_DIR/run.sh" ]; then
-    rm -f "$DATA_DIR/run.sh"
+  if [ -L "${DATA_DIR}/run.sh" ]; then
+    rm -f "${DATA_DIR}/run.sh"
   fi
 
-  if [ -L "$DATA_DIR/user_jvm_args.txt" ]; then
-    rm -f "$DATA_DIR/user_jvm_args.txt"
+  if [ -L "${DATA_DIR}/user_jvm_args.txt" ]; then
+    rm -f "${DATA_DIR}/user_jvm_args.txt"
   fi
 
-  if [ -L "$DATA_DIR/libraries" ]; then
-    rm -f "$DATA_DIR/libraries"
+  if [ -L "${DATA_DIR}/libraries" ]; then
+    rm -f "${DATA_DIR}/libraries"
   fi
 }
 
@@ -110,7 +110,7 @@ trap 'stop_server' TERM
 
 # Wait for command to end
 # exits when main command fails
-wait "$CMD_PID"
+wait "${CMD_PID}"
 
 printf -- 'minecraft-server: error: server stopped unexpectedly\n'
 
