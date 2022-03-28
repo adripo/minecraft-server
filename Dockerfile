@@ -41,7 +41,7 @@ RUN echo "**** install runtime packages ****" && \
       shadow \
       curl \
       tzdata \
-      openjdk17
+      openjdk17-jre-headless
 
 # Add s6 overlay-noarch
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
