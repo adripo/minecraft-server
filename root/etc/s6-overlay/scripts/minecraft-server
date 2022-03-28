@@ -1,4 +1,4 @@
-#!/command/with-contenv bash
+#!/command/with-contenv sh
 
 ## Functions
 
@@ -7,18 +7,13 @@ start_server() {
   # Execute command in data directory for persistence
   printf -- 'minecraft-server: info: starting server\n'
 
-  # Execute main command
-  # Details:
-  # it is used process substitution (which generates a file): <()
-  # and input redirection (which connects the file to STDIN): <
-  # towards commands group in subshell: ()
-  (
-    # Execute command in data directory for persistence
-    cd "${DATA_DIR}" || exit 1
+  # Execute command in data directory for persistence
+  cd "${DATA_DIR}" || exit 1
 
-    ./run.sh nogui
+  # Redirect input from in to run.sh
+  redirfd -rnb 0 "${STDIN_PIPE}" redirfd -w 2 "${STDIN_PIPE}" ./run.sh nogui &
 
-  ) < <(tail -f "${STDIN_PIPE}") &
+  cd "${APP_DIR}" || exit 1
 
   # Get executed command pid
   CMD_PID=$!
