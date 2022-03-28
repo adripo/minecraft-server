@@ -29,9 +29,6 @@ jobs:
           script: |
             const versions = process.env.REF_NAME.split('-')
             core.setOutput('mc_version', versions[0])
-            return versions
-      - run: echo "${{ steps.split.outputs.mc_version }}"
-      - run: echo "${{ steps.split.outputs.result }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -41,10 +38,10 @@ jobs:
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}.{{minor}},prefix=v
-            type=semver,pattern={{major}}
-            type=semver,pattern={{major}},prefix=v
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.split.outputs.mc_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.split.outputs.mc_version }},prefix=v
+            type=semver,pattern={{major}},value=${{ steps.split.outputs.mc_version }}
+            type=semver,pattern={{major}},value=${{ steps.split.outputs.mc_version }},prefix=v
             type=sha
 
       - name: Get build args from build.env
