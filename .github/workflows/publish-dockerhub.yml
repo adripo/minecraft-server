@@ -26,8 +26,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const version = context.github.ref_name.split('-')[0]
-            core.setOutput('version', version)
+            const version = context.github.ref_name.split('-')
+            core.setOutput('version', version[0])
       - run: echo "${{ steps.split.outputs.version }}"
       - run: echo "${{ steps.split.outputs.result }}"
 
