@@ -24,11 +24,13 @@ jobs:
       - name: Split minecraft and forge versions
         id: split
         uses: actions/github-script@v6
+        env:
+          REF_NAME: ${{ github.ref_name }}
         with:
           script: |
-            const version = context.ref.split('-')
-            core.setOutput('version', version[0])
-      - run: echo "${{ steps.split.outputs.version }}"
+            const versions = process.env.REF_NAME.split('-')
+            core.setOutput('mc_version', versions[0])
+      - run: echo "${{ steps.split.outputs.mc_version }}"
       - run: echo "${{ steps.split.outputs.result }}"
 
       - name: Extract metadata (tags, labels) for Docker
