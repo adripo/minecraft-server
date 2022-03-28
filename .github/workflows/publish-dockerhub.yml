@@ -30,6 +30,7 @@ jobs:
           script: |
             const versions = process.env.REF_NAME.split('-')
             core.setOutput('mc_version', versions[0])
+            return versions
       - run: echo "${{ steps.split.outputs.mc_version }}"
       - run: echo "${{ steps.split.outputs.result }}"
 
