@@ -11,7 +11,7 @@ start_server() {
   cd "${DATA_DIR}" || exit 1
 
   # Redirect input from in to run.sh
-  redirfd -rnb 0 "${STDIN_PIPE}" redirfd -w 2 "${STDIN_PIPE}" ./run.sh nogui &
+  redirfd -rnb 0 "${STDIN_PIPE}" redirfd -w 3 "${STDIN_PIPE}" ./run.sh nogui &
 
   cd "${APP_DIR}" || exit 1
 
