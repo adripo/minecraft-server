@@ -37,7 +37,6 @@ LABEL org.opencontainers.image.authors="adripo"
 # Install dependencies
 RUN echo "**** install runtime packages ****" && \
     apk add --no-cache \
-      bash \
       shadow \
       curl \
       tzdata \
