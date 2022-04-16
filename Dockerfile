@@ -8,7 +8,7 @@ ARG MC_SERVER="minecraft_server.${MC_VERSION}"
 
 # Set version for s6 overlay
 ARG S6_OVERLAY_VERSION="3.1.0.1"
-ARG OVERLAY_ARCH="amd64"
+ARG S6_OVERLAY_ARCH="x86_64"
 
 # ARG - ENV
 # Absolute path of app directory
@@ -46,10 +46,10 @@ RUN echo "**** install runtime packages ****" && \
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
 RUN rm -f /tmp/s6-overlay-noarch.tar.xz
-# Add s6 overlay-x86_64
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
-RUN rm -f /tmp/s6-overlay-x86_64.tar.xz
+# Add s6 overlay-arch
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
+RUN rm -f /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
 
 
 # Create abc user
@@ -58,11 +58,9 @@ RUN echo "**** create abc user and group ****" && \
     adduser -u ${PUID} -G abc -h ${APP_DIR} -D abc
 
 # Create data dir
-RUN mkdir -p ${DATA_DIR}
-RUN chown abc:abc ${DATA_DIR}
-
-# Add local files
-COPY root/ /
+RUN echo "**** create data directory ****" \
+    mkdir -p ${DATA_DIR} && \
+    chown abc:abc ${DATA_DIR}
 
 # Set workdir
 WORKDIR ${APP_DIR}
@@ -84,6 +82,10 @@ RUN rm -rf /tmp/*
 
 # Start as root
 USER root
+
+# Add local files
+COPY root/ /
+
 
 # Volume mount point
 VOLUME ${DATA_DIR}
