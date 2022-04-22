@@ -24,10 +24,10 @@ ARG STDIN_PIPE="${APP_DIR}/in"
 ENV STDIN_PIPE="${STDIN_PIPE}"
 
 # ENV default values
-ENV JVM_XMS=1G
-ENV JVM_XMX=4G
 ENV PUID=1000
 ENV PGID=1000
+ENV JVM_XMS=1G
+ENV JVM_XMX=4G
 
 # Labels
 LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILDTIME}"
@@ -58,7 +58,7 @@ RUN echo "**** create abc user and group ****" && \
     adduser -u ${PUID} -G abc -h ${APP_DIR} -D abc
 
 # Create data dir
-RUN echo "**** create data directory ****" \
+RUN echo "**** create data directory ****" && \
     mkdir -p ${DATA_DIR} && \
     chown abc:abc ${DATA_DIR}
 
