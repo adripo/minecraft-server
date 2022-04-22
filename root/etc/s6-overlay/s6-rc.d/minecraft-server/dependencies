@@ -1,3 +1,4 @@
 set-timeout
 usermod
 jvm-args
+accept-eula
