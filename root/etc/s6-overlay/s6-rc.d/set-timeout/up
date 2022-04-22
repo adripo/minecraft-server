@@ -1,23 +1,25 @@
 #!/command/execlineb -P
 with-contenv
 
-# Minimum timeout - set same as docker stop default timeout [s]
-define minimum_timeout 10
 # Main service name
 define service_name minecraft-server
+# Minimum timeout - set same as docker stop default timeout [s]
+define minimum_timeout 10
 
 # Get STOP_TIMEOUT env variable value [s]
 importas -D "" stop_timeout STOP_TIMEOUT
 
-# If STOP_TIMEOUT is set continue
-if { s6-test -n ${stop_timeout} }
+# If STOP_TIMEOUT is set, continue
+ifelse { s6-test -n ${stop_timeout} }
+{
+    # If stop_timeout is greater than minimum_timeout, subtract minimum_timeout (10s) and set timeout
+    # Else do not set timeout-kill
+    ifelse { s6-test ${stop_timeout} -gt $minimum_timeout  }
+    {
+        # Calculate normalized timeout by subtracting minimum_timeout and converting to ms
+        backtick -E st_norm { s6-expr \( ${stop_timeout} - $minimum_timeout \) \* 1000 }
 
-# If stop_timeout is greater than minimum_timeout, subtract minimum_timeout (10s)
-# Else do not set timeout-kill
-if { s6-test ${stop_timeout} -gt $minimum_timeout  }
-
-# Calculate normalized timeout by subtracting minimum_timeout and converting to ms
-backtick -E st_norm { s6-expr \( ${stop_timeout} - $minimum_timeout \) \* 1000 }
-
-# Set normalized timeout in main service timeout-kill
-redirfd -w 1 /run/service/${service_name}/timeout-kill s6-echo ${st_norm}
+        # Set normalized timeout in main service timeout-kill
+        redirfd -w 1 "/run/service/${service_name}/timeout-kill" s6-echo "${st_norm}"
+    }
+}
