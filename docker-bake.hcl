@@ -23,15 +23,3 @@ target "build-arm64" {
     "linux/arm64"
   ]
 }
-
-target "build-armv7" {
-  inherits = ["docker-metadata-action"]
-  context = "./"
-  dockerfile = "Dockerfile"
-  args = {
-    "S6_OVERLAY_ARCH" = "arm"
-  }
-  platforms = [
-    "linux/arm/v7"
-  ]
-}

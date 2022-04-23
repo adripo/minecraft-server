@@ -76,5 +76,4 @@ jobs:
           targets: |
             build-amd64
             build-arm64
-            build-armv7
           push: true
