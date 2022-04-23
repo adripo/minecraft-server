@@ -29,7 +29,7 @@ target "build-armv7" {
   context = "./"
   dockerfile = "Dockerfile"
   args = {
-    "S6_OVERLAY_ARCH" = "arm32"
+    "S6_OVERLAY_ARCH" = "arm"
   }
   platforms = [
     "linux/arm/v7"
