@@ -80,6 +80,5 @@ jobs:
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file }}
           targets: |
-            build-amd64
-            build-arm64
+            build
           push: true
