@@ -71,10 +71,10 @@ USER abc
 
 # Setup server
 RUN echo "**** setup server ****"
-COPY --chown=abc:abc server-setup.sh .
-RUN chmod +x server-setup.sh
-RUN ./server-setup.sh
-RUN rm -f server-setup.sh
+COPY --chown=abc:abc server-setup.sh ${APP_DIR}
+RUN chmod +x ${APP_DIR}/server-setup.sh
+RUN ${APP_DIR}/server-setup.sh
+RUN rm -f ${APP_DIR}/server-setup.sh
 
 # Cleanup
 RUN rm -rf /tmp/*
