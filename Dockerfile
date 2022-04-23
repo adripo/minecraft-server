@@ -34,6 +34,10 @@ LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILD
 LABEL maintainer="adripo"
 LABEL org.opencontainers.image.authors="adripo"
 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM" > /log
+
 # Install dependencies
 RUN echo "**** install runtime packages ****" && \
     apk add --no-cache \
