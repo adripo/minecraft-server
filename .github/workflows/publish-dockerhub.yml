@@ -1,8 +1,9 @@
 name: Publish Docker image
 
 on:
-  release:
-    types: [published]
+  push
+#  release:
+#    types: [published]
 
 jobs:
   push_to_registry:
@@ -53,15 +54,27 @@ jobs:
           
           echo "::set-output name=args::${args}"
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: |
+#            ${{ steps.meta.outputs.labels }}
+#            org.opencontainers.image.documentation=${{ join(fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.url'], '/blob/main/README.md') }}
+#          build-args: |
+#            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+#            ${{ fromJSON(steps.extra-build-args.outputs.args) }}
+
+      - name: Build and push Docker image for all platforms
+        uses: docker/bake-action@v1
         with:
-          context: .
+          files: |
+            ./docker-bake.hcl
+            ${{ steps.meta.outputs.bake-file }}
+          targets: |
+            build-amd64
+            build-arm64
+            build-armv7
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: |
-            ${{ steps.meta.outputs.labels }}
-            org.opencontainers.image.documentation=${{ join(fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.url'], '/blob/main/README.md') }}
-          build-args: |
-            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            ${{ fromJSON(steps.extra-build-args.outputs.args) }}
