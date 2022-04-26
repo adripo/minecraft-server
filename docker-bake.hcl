@@ -1,6 +1,9 @@
 target "docker-metadata-action" {}
 
 group "build" {
+  inherits = [
+    "docker-metadata-action"
+  ]
   targets = [
     "build-amd64",
     "build-arm64"]
@@ -13,7 +16,6 @@ target "build-default" {
 
 target "build-amd64" {
   inherits = [
-    "docker-metadata-action",
     "build-default"
   ]
   args = {
@@ -26,7 +28,6 @@ target "build-amd64" {
 
 target "build-arm64" {
   inherits = [
-    "docker-metadata-action",
     "build-default"
   ]
   args = {
