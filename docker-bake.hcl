@@ -2,7 +2,6 @@ target "docker-metadata-action" {}
 
 group "build" {
   targets = [
-    "docker-metadata-action",
     "build-amd64",
     "build-arm64"]
 }
@@ -14,7 +13,8 @@ target "build-default" {
 
 target "build-amd64" {
   inherits = [
-    "build-default",
+    "docker-metadata-action",
+    "build-default"
   ]
   args = {
     S6_OVERLAY_ARCH = "x86_64"
@@ -26,7 +26,8 @@ target "build-amd64" {
 
 target "build-arm64" {
   inherits = [
-    "build-default",
+    "docker-metadata-action",
+    "build-default"
   ]
   args = {
     S6_OVERLAY_ARCH = "aarch64"
