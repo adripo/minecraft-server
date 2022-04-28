@@ -1,0 +1,26 @@
+services:
+  server:
+    container_name: ${MC_NAME}
+    image: adripo/minecraft-server-forge:${MC_VERSION}
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - JVM_XMS=${MC_JVM_XMS}
+      - JVM_XMX=${MC_JVM_XMX}
+      - STOP_TIMEOUT=${GRACE_TIMEOUT}
+      - ACCEPT_EULA=true
+    ports:
+      - 25565:25565
+    volumes:
+      - mc_data:/data
+    stop_grace_period: ${GRACE_TIMEOUT}s
+    restart: unless-stopped
+
+volumes:
+  mc_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /path/to/data
