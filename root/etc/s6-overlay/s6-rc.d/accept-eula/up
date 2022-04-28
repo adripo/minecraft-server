@@ -5,13 +5,13 @@ with-contenv
 importas -D "" accept_eula ACCEPT_EULA
 
 # If accept_eula is true
-ifelse { s6-test "true" = ${accept_eula} }
+ifelse { s6-test "${accept_eula}" = "true" }
 {
     # Get DATA_DIR env variable
     importas -D "" data_dir DATA_DIR
 
     # If data_dir is not null
-    if { s6-test -n ${data_dir} }
+    if { s6-test -n "${data_dir}" }
 
     # Set eula=true in data directory
     redirfd -w 1 "${data_dir}/eula.txt" s6-echo "eula=true"
