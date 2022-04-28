@@ -1,4 +1,4 @@
-name: publish-docker-image
+name: publish-dockerhub
 
 on:
   release:
