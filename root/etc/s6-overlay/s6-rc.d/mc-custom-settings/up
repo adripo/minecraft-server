@@ -1,0 +1,1 @@
+s6-setuidgid abc /etc/s6-overlay/scripts/mc-custom-settings

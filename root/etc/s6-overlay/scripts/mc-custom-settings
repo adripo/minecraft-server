@@ -1,0 +1,49 @@
+#!/command/with-contenv sh
+
+## Defaults
+
+ENV_DELIMITER="MC_"
+service_name="minecraft-server"
+
+## Functions
+
+# Define change_option procedure
+# $1 = option_name
+# $2 = option_value
+change_option() {
+  # Execute command in data directory for persistence
+  printf -- 'mc-custom-settings: info: setting option %s=%s\n' "$1" "$2"
+
+  # Set given option inside server.properties
+  sed -i "s/^$1=.*$/$1=$2/g" "${DATA_DIR}/server.properties"
+}
+
+## Main
+
+# Wait until server.properties exists
+printf -- 'mc-custom-settings: info: waiting for server.properties to be created\n'
+until [ -f "${DATA_DIR}/server.properties" ]
+do
+     sleep 1
+done
+
+# Foreach env variable that starts with $ENV_DELIMITER, set its value
+printf -- 'mc-custom-settings: info: parsing custom properties\n'
+env | while IFS= read -r line; do
+  # Get env name
+  env_name=${line%%=*}
+
+  # If env name starts with $ENV_DELIMITER
+  if test "${env_name}" != "${env_name#${ENV_DELIMITER}}"; then
+    # Get option name
+    # remove ENV_DELIMITER, replace '_' with '-' and converts upper to lower case
+    option_name=$(printf -- "%s\n" "${env_name#${ENV_DELIMITER}}" | tr '_' '-' | tr '[:upper:]' '[:lower:]')
+
+    # Get option value
+    option_value=${line#*=}
+
+    # Set option value
+    change_option "${option_name}" "${option_value}"
+  fi
+done
+

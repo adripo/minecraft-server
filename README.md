@@ -38,6 +38,7 @@ services:
       - JVM_XMS=2G
       - JVM_XMX=8G
       - STOP_TIMEOUT=600
+      - MC_online_mode=false
     ports:
       - 25565:25565
     volumes:
@@ -70,6 +71,7 @@ docker run -d \
   -e JVM_XMS=2G \
   -e JVM_XMX=8G \
   -e STOP_TIMEOUT=600 \
+  -e MC_online_mode=false \
   -p 25565:25565 \
   -v /path/to/data:/data \
   --stop_grace_period: 600s
@@ -97,15 +99,16 @@ docker stop \
 
 ### Environment variables
 
-| Env Variable | Default Value | Function                                                                                                                                                                             |
-|--------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| PUID         | 1000          | UserID used to access shared volumes on host (see below)                                                                                                                             |
-| PGID         | 1000          | GroupID  used to access shared volumes on host (see below)                                                                                                                           |
-| TZ           | UTC           | Time zone to use (eg. Europe/London)                                                                                                                                                 |
-| JVM_XMS      | 1G            | Java JVM parameter used for initial memory allocation pool                                                                                                                           |
-| JVM_XMX      | 4G            | Java JVM parameter used for the maximum memory allocation pool                                                                                                                       |
-| STOP_TIMEOUT | 0             | Timeout duration until server stops gracefully (suggested: 600s) <br/> **_NOTE:_** Remember to set the same value for `stop_grace_period`                                            |
-| ACCEPT_EULA  | false         | Automatically accept Minecraft eula on new config.<br/> If `false` the server will continuously restart until eula is accepted manually by editing `eula.txt` file in data directory |
+| Env Variable       | Default Value | Function                                                                                                                                                                                                                                                                                                                                               |
+|--------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PUID               | 1000          | UserID used to access shared volumes on host (see below)                                                                                                                                                                                                                                                                                               |
+| PGID               | 1000          | GroupID  used to access shared volumes on host (see below)                                                                                                                                                                                                                                                                                             |
+| TZ                 | UTC           | Time zone to use (eg. Europe/London)                                                                                                                                                                                                                                                                                                                   |
+| JVM_XMS            | 1G            | Java JVM parameter used for initial memory allocation pool                                                                                                                                                                                                                                                                                             |
+| JVM_XMX            | 4G            | Java JVM parameter used for the maximum memory allocation pool                                                                                                                                                                                                                                                                                         |
+| STOP_TIMEOUT       | 0             | Timeout duration until server stops gracefully (suggested: 600s) <br/> **_NOTE:_** Remember to set the same value for `stop_grace_period`                                                                                                                                                                                                              |
+| ACCEPT_EULA        | false         | Automatically accept Minecraft eula on new config.<br/> If `false` the server will continuously restart until eula is accepted manually by editing `eula.txt` file in data directory                                                                                                                                                                   |
+| MC_[custom_option] | -             | Set custom option in `server.properties`.<br/> **_NOTE:_ every option must be written with `_` instead of`-`, but will be automatically converted to apply the correct property.**<br/>Example:<br/>- `MC_online_mode=false` will set `online-mode=false` in `server.properties`<br/>- `MC_level_name=custom-world` will set `level-name=custom-world` |
 
 > `STOP_TIMEOUT` is the maximum time the Minecraft server is allowed to process the `save` command (save the world) and stop gracefully.
 
