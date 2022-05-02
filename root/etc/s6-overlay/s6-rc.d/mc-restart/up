@@ -1,0 +1,6 @@
+# Main service name
+define service_name "minecraft-server"
+
+# Restart main service
+foreground { s6-echo "s6-user: info: restarting service ${service_name}" }
+s6-svc -r "/run/service/${service_name}"
