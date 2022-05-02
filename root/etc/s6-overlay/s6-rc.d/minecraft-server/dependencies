@@ -1,4 +1,4 @@
-set-timeout
-usermod
+os-libseccomp
+os-usermod
+stop-timeout
 jvm-args
-accept-eula
