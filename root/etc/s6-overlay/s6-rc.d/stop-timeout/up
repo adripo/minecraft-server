@@ -1,10 +1,10 @@
-#!/command/execlineb -P
+# Load env
 with-contenv
 
 # Main service name
-define service_name minecraft-server
+define service_name "minecraft-server"
 # Minimum timeout - set same as docker stop default timeout [s]
-define minimum_timeout 10
+define minimum_timeout "10"
 
 # Get STOP_TIMEOUT env variable value [s]
 importas -D "" stop_timeout STOP_TIMEOUT
@@ -20,6 +20,7 @@ ifelse { s6-test -n "${stop_timeout}" }
         backtick -E st_norm { s6-expr \( ${stop_timeout} - $minimum_timeout \) \* 1000 }
 
         # Set normalized timeout in main service timeout-kill
+        foreground { s6-echo "stop-timeout: info: setting timeout-kill=${st_norm} for service ${service_name}\n" }
         redirfd -w 1 "/run/service/${service_name}/timeout-kill" s6-echo "${st_norm}"
     }
 }
