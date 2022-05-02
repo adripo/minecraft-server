@@ -7,8 +7,8 @@ ARG DW_LINK
 ARG MC_SERVER="minecraft_server.${MC_VERSION}"
 
 # Minecraft server port. Do not change.
-ARG MC_PORT=25565
-ENV MC_PORT="${MC_PORT}"
+ARG DEFAULT_MC_PORT=25565
+ENV DEFAULT_MC_PORT="${DEFAULT_MC_PORT}"
 
 # Set version for s6 overlay
 ARG S6_OVERLAY_VERSION="3.1.0.1"
@@ -94,13 +94,13 @@ COPY root/ /
 
 # Healthcheck
 HEALTHCHECK --interval=2m30s --timeout=10s --retries=2 --start-period=5m \
-    CMD netstat -tln | grep -c ${MC_PORT} || exit 1
+    CMD netstat -tln | grep -c ${DEFAULT_MC_PORT} || exit 1
 
 # Volume mount point
 VOLUME ${DATA_DIR}
 
 # Expose port
-EXPOSE ${MC_PORT}
+EXPOSE ${DEFAULT_MC_PORT}
 
 # Startup
 ENTRYPOINT ["/init"]
