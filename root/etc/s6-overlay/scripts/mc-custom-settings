@@ -2,48 +2,59 @@
 
 ## Defaults
 
-ENV_DELIMITER="MC_"
-service_name="minecraft-server"
+SCRIPT_NAME="mc-custom-settings"
 
-## Functions
-
-# Define change_option procedure
-# $1 = option_name
-# $2 = option_value
-change_option() {
-  # Execute command in data directory for persistence
-  printf -- 'mc-custom-settings: info: setting option %s=%s\n' "$1" "$2"
-
-  # Set given option inside server.properties
-  sed -i "s/^$1=.*$/$1=$2/g" "${DATA_DIR}/server.properties"
-}
+env_delimiter="MC_"
+properties_file="server.properties"
 
 ## Main
 
-# Wait until server.properties exists
-printf -- 'mc-custom-settings: info: waiting for server.properties to be created\n'
-until [ -f "${DATA_DIR}/server.properties" ]
+# Wait until file exists
+printf -- '%s: info: checking %s\n' "${SCRIPT_NAME}" "${properties_file}"
+until [ -f "${DATA_DIR}/${properties_file}" ]
 do
-     sleep 1
+  sleep 0.5
 done
 
-# Foreach env variable that starts with $ENV_DELIMITER, set its value
-printf -- 'mc-custom-settings: info: parsing custom properties\n'
+# Copy temp file
+cp "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"
+
+# Foreach env variable that starts with $env_delimiter, set its value
+printf -- '%s: info: parsing custom properties\n' "${SCRIPT_NAME}"
 env | while IFS= read -r line; do
+
   # Get env name
   env_name=${line%%=*}
 
-  # If env name starts with $ENV_DELIMITER
-  if test "${env_name}" != "${env_name#${ENV_DELIMITER}}"; then
+  # If env name starts with $env_delimiter
+  if [ "${env_name}" != "${env_name#${env_delimiter}}" ]; then
+
     # Get option name
-    # remove ENV_DELIMITER, replace '_' with '-' and converts upper to lower case
-    option_name=$(printf -- "%s\n" "${env_name#${ENV_DELIMITER}}" | tr '_' '-' | tr '[:upper:]' '[:lower:]')
+    # remove env_delimiter, replace '_' with '-' and converts upper to lower case
+    option_name=$(printf -- "%s\n" "${env_name#${env_delimiter}}" | tr '_' '-' | tr '[:upper:]' '[:lower:]')
 
     # Get option value
     option_value=${line#*=}
 
-    # Set option value
-    change_option "${option_name}" "${option_value}"
+    # Create regexp and replacement for sed
+    regexp="^${option_name}=.*$"
+    replacement="${option_name}=${option_value}"
+
+    # If option already set, skip
+    if grep "^${replacement}$" "${DATA_DIR}/${properties_file}"; then
+
+      # Set given option inside file
+      printf -- '%s: info: setting option %s\n' "${SCRIPT_NAME}" "${replacement}"
+      sed -i "s/${regexp}/${replacement}/g" "${DATA_DIR}/${properties_file}"
+
+    fi
   fi
 done
 
+# If there are differences between before and after create restart file
+if ! cmp -s "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"; then
+  touch "/tmp/${TMP_MC_RESTART}"
+fi
+
+# Remove temp file
+rm -f "/tmp/${properties_file}"
