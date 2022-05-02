@@ -1,4 +1,4 @@
-#!/command/execlineb -P
+# Load env
 with-contenv
 
 # Get ACCEPT_EULA env variable value [true/false]
@@ -14,5 +14,6 @@ ifelse { s6-test "${accept_eula}" = "true" }
     if { s6-test -n "${data_dir}" }
 
     # Set eula=true in data directory
+    foreground { s6-echo "mc-accept-eula: info: setting eula=true\n" }
     redirfd -w 1 "${data_dir}/eula.txt" s6-echo "eula=true"
 }
