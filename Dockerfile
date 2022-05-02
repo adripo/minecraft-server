@@ -32,7 +32,6 @@ ENV PUID=1000
 ENV PGID=1000
 ENV JVM_XMS=1G
 ENV JVM_XMX=4G
-ENV TMP_MC_RESTART="mc-restart-execute"
 
 # Labels
 LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILDTIME}"
