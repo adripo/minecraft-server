@@ -1,0 +1,43 @@
+#!/command/with-contenv sh
+
+## Defaults
+
+SCRIPT_NAME="mc-accept-eula"
+
+eula_file="eula.txt"
+
+## Main
+
+# If ACCEPT_EULA is true
+if test "${ACCEPT_EULA}" = "true"; then
+
+  # Create regexp and replacement for sed
+  regexp="^eula=.*$"
+  replacement="eula=true"
+
+  # If eula already true, skip
+  if grep "^${replacement}$" "${DATA_DIR}/${eula_file}"; then
+
+    # Wait until file exists
+    printf -- '%s: info: checking %s\n' "${SCRIPT_NAME}" "${eula_file}"
+    until [ -f "${DATA_DIR}/${eula_file}" ]
+    do
+      sleep 0.5
+    done
+
+    # Copy temp file
+    cp "${DATA_DIR}/${eula_file}" "/tmp/${eula_file}"
+
+    # Setting eula=true
+    printf -- '%s: info: setting eula=true\n' "${SCRIPT_NAME}"
+    sed -i "s/${regexp}/${replacement}/g" "${DATA_DIR}/${eula_file}"
+
+    # If there are differences create restart file
+    if ! cmp -s "${DATA_DIR}/${eula_file}" "/tmp/${eula_file}"; then
+      touch "/tmp/${TMP_MC_RESTART}"
+    fi
+
+    # Remove temp file
+    rm -f "/tmp/${eula_file}"
+  fi
+fi
