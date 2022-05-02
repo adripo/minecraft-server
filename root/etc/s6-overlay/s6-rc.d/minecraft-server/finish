@@ -1,6 +1,6 @@
 #!/command/execlineb -S0
 
-ifelse { test $1 = 256 } {
+ifelse { s6-test $1 = 256 } {
    s6-echo "s6-user: info: service minecraft-server killed by signal $2"
 }
    s6-echo "s6-user: info: service minecraft-server exited with code $1"
