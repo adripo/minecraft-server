@@ -6,7 +6,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
       - JVM_XMS=${MC_JVM_XMS}
       - JVM_XMX=${MC_JVM_XMX}
       - STOP_TIMEOUT=${GRACE_TIMEOUT}

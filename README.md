@@ -35,7 +35,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
       - JVM_XMS=2G
       - JVM_XMX=8G
       - STOP_TIMEOUT=600
@@ -69,7 +68,6 @@ docker run -d \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=Europe/London \
-  -e S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
   -e JVM_XMS=2G \
   -e JVM_XMX=8G \
   -e STOP_TIMEOUT=600 \
@@ -106,7 +104,6 @@ docker stop \
 | PUID                             | 1000          | UserID used to access shared volumes on host (see below)                                                                                                                                                                                                                                                                                               |
 | PGID                             | 1000          | GroupID  used to access shared volumes on host (see below)                                                                                                                                                                                                                                                                                             |
 | TZ                               | UTC           | Time zone to use (eg. Europe/London)                                                                                                                                                                                                                                                                                                                   |
-| S6_CMD_WAIT_FOR_SERVICES_MAXTIME | 0             | Disable time limit to start the services. More details [here](https://github.com/just-containers/s6-overlay#customizing-s6-behaviour)                                                                                                                                                                                                                  |
 | JVM_XMS                          | 1G            | Java JVM parameter used for initial memory allocation pool                                                                                                                                                                                                                                                                                             |
 | JVM_XMX                          | 4G            | Java JVM parameter used for the maximum memory allocation pool                                                                                                                                                                                                                                                                                         |
 | STOP_TIMEOUT                     | 0             | Timeout duration until server stops gracefully (suggested: 600s) <br/> **_NOTE:_** Remember to set the same value for `stop_grace_period`                                                                                                                                                                                                              |

@@ -33,6 +33,9 @@ ENV PGID=1000
 ENV JVM_XMS=1G
 ENV JVM_XMX=4G
 
+# Needed to execute custom scripts. Do not change.
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
+
 # Labels
 LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILDTIME}"
 LABEL maintainer="adripo"
