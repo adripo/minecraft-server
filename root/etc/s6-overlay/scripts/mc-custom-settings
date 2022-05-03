@@ -42,7 +42,7 @@ s6-setuidgid abc env | while IFS= read -r line; do
     replacement="${option_name}=${option_value}"
 
     # If option already set, skip
-    if grep "^${replacement}$" "${DATA_DIR}/${properties_file}"; then
+    if ! grep -q "^${replacement}$" "${DATA_DIR}/${properties_file}"; then
 
       # Set given option inside file
       printf -- '%s: info: setting option %s\n' "${SCRIPT_NAME}" "${replacement}"

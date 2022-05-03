@@ -23,7 +23,7 @@ if [ "${ACCEPT_EULA}" = "true" ]; then
   replacement="eula=true"
 
   # If eula already true, skip
-  if grep "^${replacement}$" "${DATA_DIR}/${eula_file}"; then
+  if ! grep -q "^${replacement}$" "${DATA_DIR}/${eula_file}"; then
 
     # Setting eula=true
     printf -- '%s: info: setting %s\n' "${SCRIPT_NAME}" "${replacement}"
