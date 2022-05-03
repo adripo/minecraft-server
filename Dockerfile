@@ -95,7 +95,7 @@ USER root
 COPY root/ /
 
 # Set correct permissions
-RUN chmod +x /root/etc/s6-overlay/scripts/*
+RUN chmod +x /etc/s6-overlay/scripts/*
 
 
 # Healthcheck
