@@ -94,7 +94,7 @@ COPY root/ /
 
 # Healthcheck
 HEALTHCHECK --interval=2m30s --timeout=10s --retries=2 --start-period=5m \
-    CMD netstat -tln | grep -c ${DEFAULT_MC_PORT} || exit 1
+    CMD netstat -tln | grep -q -c ${DEFAULT_MC_PORT} || exit 1
 
 # Volume mount point
 VOLUME ${DATA_DIR}
