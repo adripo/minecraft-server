@@ -1,4 +1,4 @@
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/adripo/minecraft-server-forge)](https://github.com/adripo/minecraft-server-forge/releases)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/adripo/minecraft-server-forge?style=flat-square)](https://github.com/adripo/minecraft-server-forge/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/adripo/minecraft-server-forge?style=flat-square)](https://hub.docker.com/r/adripo/minecraft-server-forge)
 [![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/adripo/minecraft-server-forge?style=flat-square)](https://hub.docker.com/r/adripo/minecraft-server-forge/tags)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/adripo/minecraft-server-forge/publish-dockerhub?style=flat-square)](https://github.com/adripo/minecraft-server-forge/actions?workflow=publish-dockerhub)
