@@ -94,6 +94,9 @@ USER root
 # Add local files
 COPY root/ /
 
+# Set correct permissions
+RUN chmod +x /root/etc/s6-overlay/scripts/*
+
 
 # Healthcheck
 HEALTHCHECK --interval=2m30s --timeout=10s --retries=2 --start-period=5m \
