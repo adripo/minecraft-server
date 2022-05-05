@@ -6,7 +6,7 @@ SCRIPT_NAME="mc-custom-settings"
 
 env_delimiter="MC_"
 properties_file="server.properties"
-service_name="minecraft-server"
+exit_code_restart="8"
 
 ## Main
 
@@ -18,11 +18,11 @@ do
 done
 
 # Copy temp file
-s6-setuidgid abc cp "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"
+cp "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"
 
 # Foreach env variable that starts with $env_delimiter, set its value
 printf -- '%s: info: parsing custom properties\n' "${SCRIPT_NAME}"
-s6-setuidgid abc env | while IFS= read -r line; do
+env | while IFS= read -r line; do
 
   # Get env name
   env_name=${line%%=*}
@@ -46,20 +46,30 @@ s6-setuidgid abc env | while IFS= read -r line; do
 
       # Set given option inside file
       printf -- '%s: info: setting option %s\n' "${SCRIPT_NAME}" "${replacement}"
-      s6-setuidgid abc sed -i "s/${regexp}/${replacement}/g" "${DATA_DIR}/${properties_file}"
+      sed -i "s/${regexp}/${replacement}/g" "${DATA_DIR}/${properties_file}"
 
     fi
   fi
 done
 
+# Set default value for restart
+restart=false
+
 # If there are differences between before and after, restart service
 if ! cmp -s "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"; then
 
-  # Restart main service (as root)
-  printf -- '%s: info: restarting service %s\n' "${SCRIPT_NAME}" "${service_name}"
-  s6-svc -r "/run/service/${service_name}"
+  # Set restart to true
+  restart=true
 
 fi
 
 # Remove temp file
-s6-setuidgid abc rm -f "/tmp/${properties_file}"
+rm -f "/tmp/${properties_file}"
+
+# If restart is needed, return special exit code
+if [ "${restart}" = "true" ]; then
+
+  # Exit value "exit_code_restart" means restart is required
+  return ${exit_code_restart}
+
+fi
