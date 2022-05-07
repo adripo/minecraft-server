@@ -1,52 +1,51 @@
 FROM alpine:3.15
 
-# ARG values
+## ARG values
 ARG BUILDTIME
 ARG MC_VERSION
 ARG DW_LINK
 ARG MC_SERVER="minecraft_server.${MC_VERSION}"
 
-# Minecraft server port. Do not change.
-ARG DEFAULT_MC_PORT=25565
-ENV DEFAULT_MC_PORT="${DEFAULT_MC_PORT}"
-
 # Set version for s6 overlay
 ARG S6_OVERLAY_VERSION="3.1.0.1"
 ARG S6_OVERLAY_ARCH="x86_64"
 
-# ARG - ENV
+# Default JDK version (please use jre-headless)
+ARG JDK_VERSION="17-jre-headless"
+
+## ARG - ENV
+# Minecraft server port. Do not change.
+ENV DEFAULT_MC_PORT=25565
+
 # Absolute path of app directory
-ARG APP_DIR="/app"
-ENV APP_DIR="${APP_DIR}"
+ENV APP_DIR="/app"
 
 # Absolute path of data directory
-ARG DATA_DIR="/data"
-ENV DATA_DIR="${DATA_DIR}"
+ENV DATA_DIR="/data"
 
 # Absolute path of STDIN fifo pipe
-ARG STDIN_PIPE="${APP_DIR}/in"
-ENV STDIN_PIPE="${STDIN_PIPE}"
+ENV STDIN_PIPE="${APP_DIR}/in"
 
-# ENV default values
+# Default PUID and PGID values
 ENV PUID=1000
 ENV PGID=1000
 
 # Needed to execute custom scripts. Do not change.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
 
-# Labels
-LABEL build_version="Minecraft Server version: ${MC_VERSION} Build-date: ${BUILDTIME}"
+## Labels
+LABEL build_version="Minecraft Server version: ${MC_VERSION} | Build-date: ${BUILDTIME}"
 LABEL maintainer="adripo"
 LABEL org.opencontainers.image.authors="adripo"
 
-
+## Build
 # Install dependencies
 RUN echo "**** install runtime packages ****" && \
     apk add --no-cache \
       shadow \
       curl \
       tzdata \
-      openjdk17-jre-headless
+      openjdk${JDK_VERSION}
 
 # Add s6 overlay-noarch
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
@@ -56,7 +55,6 @@ RUN rm -f /tmp/s6-overlay-noarch.tar.xz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
 RUN rm -f /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
-
 
 # Create abc user
 RUN echo "**** create abc user and group ****" && \
@@ -71,7 +69,7 @@ RUN echo "**** create data directory ****" && \
 # Set workdir
 WORKDIR ${APP_DIR}
 
-
+## Setup server
 # Setup server as abc user
 USER abc
 
@@ -85,17 +83,16 @@ RUN rm -f server-setup.sh
 # Cleanup
 RUN rm -rf /tmp/*
 
-
+## Setup services
 # Start as root
 USER root
 
 # Add local files
 COPY root/ /
-
-# Set correct permissions
+# Set correct permissions on scripts
 RUN chmod +x /etc/s6-overlay/scripts/*
 
-
+## Extra config
 # Healthcheck
 HEALTHCHECK --interval=2m30s --timeout=10s --retries=2 --start-period=5m \
     CMD netstat -tln | grep -q -c ${DEFAULT_MC_PORT} || exit 1
