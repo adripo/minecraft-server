@@ -22,7 +22,7 @@ ifelse { s6-test -n "${stop_timeout}" }
 
         # Set normalized timeout in main service timeout-kill
         foreground {
-            s6-echo "stop-timeout: info: setting timeout-kill=${st_norm} for service ${service_name}"
+            s6-echo "os-stop-timeout: info: setting timeout-kill=${st_norm} for service ${service_name}"
         }
         redirfd -w 1 "/run/service/${service_name}/timeout-kill" s6-echo "${st_norm}"
     }
