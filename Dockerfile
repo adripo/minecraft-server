@@ -30,8 +30,6 @@ ENV STDIN_PIPE="${STDIN_PIPE}"
 # ENV default values
 ENV PUID=1000
 ENV PGID=1000
-ENV JVM_XMS=1G
-ENV JVM_XMX=4G
 
 # Needed to execute custom scripts. Do not change.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
