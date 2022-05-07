@@ -1,5 +1,6 @@
 # Main service name
 define service_name "minecraft-server"
+
 # Exit code that means restart is needed (same as the one set in the script)
 define exit_code_restart "8"
 

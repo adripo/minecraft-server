@@ -3,6 +3,7 @@ with-contenv
 
 # Main service name
 define service_name "minecraft-server"
+
 # Minimum timeout - set same as docker stop default timeout [s]
 define minimum_timeout "10"
 

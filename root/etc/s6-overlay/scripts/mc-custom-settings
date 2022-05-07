@@ -61,6 +61,10 @@ if ! cmp -s "${DATA_DIR}/${properties_file}" "/tmp/${properties_file}"; then
   # Set restart to true
   restart=true
 
+else
+
+  printf -- '%s: info: no custom option was set\n' "${SCRIPT_NAME}"
+
 fi
 
 # Remove temp file
