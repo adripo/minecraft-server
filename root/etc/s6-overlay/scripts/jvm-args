@@ -19,9 +19,9 @@ if [ -n "${JVM_XMX}" ]; then
   JVM_COMBINED="${JVM_COMBINED}-Xmx${JVM_XMX} "
 fi
 
-# If JVM_EXTRA_VARS is set
-if [ -n "${JVM_EXTRA_VARS}" ]; then
-  JVM_COMBINED="${JVM_COMBINED}${JVM_EXTRA_VARS} "
+# If JVM_EXTRA is set
+if [ -n "${JVM_EXTRA}" ]; then
+  JVM_COMBINED="${JVM_COMBINED}${JVM_EXTRA} "
 fi
 
 # Check if JVM_COMBINED has any parameter
