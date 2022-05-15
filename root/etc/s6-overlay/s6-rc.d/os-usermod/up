@@ -1,1 +1,70 @@
-/etc/s6-overlay/scripts/os-usermod
+# Load env
+with-contenv
+
+# Get APP_DIR env variable
+importas -D "" app_dir APP_DIR
+
+# Get DATA_DIR env variable
+importas -D "" data_dir DATA_DIR
+
+# Get PGID env variable
+importas -D "" pgid PGID
+
+# Get PUID env variable
+importas -D "" puid PUID
+
+
+foreground {
+    # Continue if PGID is set
+    if { s6-test -n "${pgid}" }
+
+    # Get current group id for abc user
+    backtick -E curr_gid { id -g abc }
+
+    # Continue if current GID is different from PGID
+    if { s6-test "${curr_gid}" != "${pgid}" }
+
+    # Set wanted PGID
+    foreground { s6-echo "os-usermod: info: setting GID to ${pgid}" }
+    foreground { groupmod -o -g "${pgid}" abc }
+
+    # Set correct group ownership on app folders
+    foreground { chgrp -R "${pgid}" "${app_dir}" }
+    foreground { chgrp -R "${pgid}" "${data_dir}" }
+}
+
+foreground {
+    # Continue if PUID is set
+    if { s6-test -n "${puid}" }
+
+    # Get current user id for abc user
+    backtick -E curr_uid { id -u abc }
+
+    # Continue if current UID is different from PUID
+    if { s6-test "${curr_uid}" != "${puid}" }
+
+    # Set wanted PUID
+    foreground { s6-echo "os-usermod: info: setting UID to ${puid}" }
+    foreground { usermod -o -u "${puid}" abc }
+
+    # Set correct user ownership on app folders
+    foreground { chown -R "${puid}" "${app_dir}" }
+    foreground { chown -R "${puid}" "${data_dir}" }
+}
+
+# Get updated GID
+backtick -E curr_gid { id -g abc }
+
+# Get updated UID
+backtick -E curr_uid { id -u abc }
+
+foreground {
+    s6-echo "
+-------------------------------------
+GID/UID
+-------------------------------------
+User uid:    ${curr_gid}
+User gid:    ${curr_uid}
+-------------------------------------
+"
+}
