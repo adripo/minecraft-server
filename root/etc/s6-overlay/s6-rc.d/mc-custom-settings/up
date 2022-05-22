@@ -4,20 +4,18 @@ define service_name "minecraft-server"
 # Exit code that means restart is needed (same as the one set in the script)
 define exit_code_restart "8"
 
+
 # Execute script
-foreground {
-    s6-setuidgid abc /etc/s6-overlay/scripts/mc-custom-settings
-}
+foreground { s6-setuidgid abc /etc/s6-overlay/scripts/mc-custom-settings }
 
 # Get exit code from script
 importas -D "" exit_code ?
 
-# If exit_code = exit_code_restart, restart is required
-ifelse { s6-test "${exit_code}" = "${exit_code_restart}" }
-{
+foreground {
+    # If exit_code = exit_code_restart, restart is required
+    if { s6-test "${exit_code}" = "${exit_code_restart}" }
+
     # Restart main service (as root)
-    foreground {
-        s6-echo "mc-custom-settings: info: restarting service ${service_name}"
-    }
+    foreground { s6-echo "mc-custom-settings: info: restarting service ${service_name}" }
     s6-svc -r "/run/service/${service_name}"
 }
