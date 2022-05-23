@@ -25,7 +25,7 @@ foreground {
     if { s6-test "${curr_gid}" != "${pgid}" }
 
     # Set wanted PGID
-    foreground { s6-echo "os-usermod: info: setting GID to ${pgid}" }
+    foreground { s6-echo -- "os-usermod: info: setting GID to ${pgid}" }
     foreground { groupmod -o -g "${pgid}" abc }
 
     # Set correct group ownership on app folders
@@ -44,7 +44,7 @@ foreground {
     if { s6-test "${curr_uid}" != "${puid}" }
 
     # Set wanted PUID
-    foreground { s6-echo "os-usermod: info: setting UID to ${puid}" }
+    foreground { s6-echo -- "os-usermod: info: setting UID to ${puid}" }
     foreground { usermod -o -u "${puid}" abc }
 
     # Set correct user ownership on app folders
@@ -59,7 +59,7 @@ backtick -E curr_gid { id -g abc }
 backtick -E curr_uid { id -u abc }
 
 foreground {
-    s6-echo "
+    s6-echo -- "
 -------------------------------------
 GID/UID
 -------------------------------------

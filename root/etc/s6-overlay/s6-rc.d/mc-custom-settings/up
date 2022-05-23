@@ -16,6 +16,6 @@ foreground {
     if { s6-test "${exit_code}" = "${exit_code_restart}" }
 
     # Restart main service (as root)
-    foreground { s6-echo "mc-custom-settings: info: restarting service ${service_name}" }
+    foreground { s6-echo -- "mc-custom-settings: info: restarting service ${service_name}" }
     s6-svc -r "/run/service/${service_name}"
 }
