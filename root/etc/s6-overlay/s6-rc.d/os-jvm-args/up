@@ -67,7 +67,6 @@ backtick JVM_PARAMETERS {
 
 # Get JVM_PARAMETERS env variable
 importas -D "" jvm_parameters JVM_PARAMETERS
-foreground { s6-echo -- "${jvm_parameters}" }
 
 # Check if JVM_PARAMETERS has any parameter
 ifelse { s6-test -n "${jvm_parameters}" }
