@@ -1,0 +1,82 @@
+# Load env
+with-contenv
+
+# Script file name
+define script_name "os-jvm-args"
+
+# Get JVM_XMS env variable
+importas -D "" jvm_xms JVM_XMS
+
+# Get JVM_XMX env variable
+importas -D "" jvm_xmx JVM_XMX
+
+# Get JVM_EXTRA env variable
+importas -D "" jvm_extra JVM_EXTRA
+
+
+backtick JVM_PARAMETERS {
+    # Get existing JVM_PARAMETERS env value
+    importas -D "" jvm_parameters JVM_PARAMETERS
+
+    # If JVM_XMS is set
+    ifelse { s6-test -n "${jvm_xms}" }
+    {
+        # Update combined JVM args
+        s6-echo -n "${jvm_parameters} -Xms${jvm_xms}"
+    }
+        # Set previous value
+        s6-echo -n "${jvm_parameters}"
+}
+
+backtick JVM_PARAMETERS {
+    # Get existing JVM_PARAMETERS env value
+    importas -D "" jvm_parameters JVM_PARAMETERS
+
+    # If JVM_XMX is set
+    ifelse { s6-test -n "${jvm_xmx}" }
+    {
+        # Update combined JVM args
+        s6-echo -n "${jvm_parameters} -Xmx${jvm_xmx}"
+    }
+        # Set previous value
+        s6-echo -n "${jvm_parameters}"
+}
+
+backtick JVM_PARAMETERS {
+    # Get existing JVM_PARAMETERS env value
+    importas -D "" jvm_parameters JVM_PARAMETERS
+
+    # If JVM_EXTRA is set
+    ifelse { s6-test -n "${jvm_extra}" }
+    {
+        # Update combined JVM args
+        s6-echo -n "${jvm_parameters} ${jvm_extra}"
+    }
+        # Set previous value
+        s6-echo -n "${jvm_parameters}"
+}
+
+
+# Trim extra spaces
+backtick JVM_PARAMETERS {
+    # Get existing JVM_PARAMETERS env value
+    importas -D "" jvm_parameters JVM_PARAMETERS
+
+    pipeline { s6-echo -n "$jvm_parameters" } xargs
+}
+
+# Get JVM_PARAMETERS env variable
+importas -D "" jvm_parameters JVM_PARAMETERS
+foreground { s6-echo -- "${jvm_parameters}" }
+
+# Check if JVM_PARAMETERS has any parameter
+ifelse { s6-test -n "${jvm_parameters}" }
+{
+    # Get APP_DIR env variable
+    importas -D "" app_dir APP_DIR
+
+    # Setup JVM args in the user_jvm_srgs file
+    foreground { s6-echo -- "${script_name}: info: setup JVM args to: ${jvm_parameters}" }
+    foreground { redirfd -w 1 "${app_dir}/user_jvm_args.txt" s6-echo -- "${jvm_parameters}" }
+}
+    foreground { s6-echo -- "${script_name}: info: no JVM args set" }
