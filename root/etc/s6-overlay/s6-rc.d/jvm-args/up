@@ -1,1 +1,0 @@
-s6-setuidgid abc /etc/s6-overlay/scripts/jvm-args
