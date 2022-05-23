@@ -27,8 +27,8 @@ ENV DATA_DIR="/data"
 ENV STDIN_PIPE="${APP_DIR}/in"
 
 # Default PUID and PGID values
-ENV PUID=1000
-ENV PGID=1000
+ARG PUID=1000
+ARG PGID=1000
 
 # Needed to execute custom scripts. Do not change.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
