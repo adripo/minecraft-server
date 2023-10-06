@@ -1,0 +1,30 @@
+{
+  "release": {
+    "1.18.2": {
+      "jdk_version": "17-jre-headless",
+      "versions": [
+        {
+          "version": "1.18.2-40.1.23",
+          "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.1-39.1.2/forge-1.18.1-39.1.2-installer.jar"
+        },
+        {
+          "version": "1.18.1-39.1.1",
+          "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.1-39.1.1/forge-1.18.1-39.1.1-installer.jar"
+        }
+      ]
+    },
+    "1.18.1": {
+      "jdk_version": "17-jre-headless",
+      "versions": [
+        {
+          "version": "1.18.1-39.1.2",
+          "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.1-39.1.2/forge-1.18.1-39.1.2-installer.jar"
+        },
+        {
+          "version": "1.18.1-39.1.1",
+          "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.1-39.1.1/forge-1.18.1-39.1.1-installer.jar"
+        }
+      ]
+    }
+  }
+}
