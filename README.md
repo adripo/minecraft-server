@@ -14,9 +14,9 @@ Minecraft Server Forge wrapped in a Docker image.
 
 This image provides various versions that are available via tags.
 
-| Tag             | Alternative tags      | Description                                                   |
-|-----------------|-----------------------|---------------------------------------------------------------|
-| `1.18.1-39.1.2` | `1.18.1`, `1.18`, `1` | Minecraft server version _1.18.1_<br/> Forge version _39.1.2_ |
+| Tag             | Alternative tags | Description                                                   |
+|-----------------|------------------|---------------------------------------------------------------|
+| `1.18.1-39.1.2` | `1.18.1`, `1.18` | Minecraft server version _1.18.1_<br/> Forge version _39.1.2_ |
 
 
 ## Usage

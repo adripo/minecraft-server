@@ -23,6 +23,7 @@ jobs:
           script: |
             const versions = process.env.REF_NAME.split('-')
             core.setOutput('mc_version', versions[0])
+            core.setOutput('forge_version', versions[1])
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -30,11 +31,11 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/minecraft-server-forge
           tags: |
-            type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=${{ steps.split.outputs.mc_version }}-${{ steps.split.outputs.forge_version }}
             type=semver,pattern={{version}},value=${{ steps.split.outputs.mc_version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.split.outputs.mc_version }}
-            type=semver,pattern={{major}},value=${{ steps.split.outputs.mc_version }}
             type=sha
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'latest') }}
 
       - name: Get build args from build.env
         id: extra-build-args
